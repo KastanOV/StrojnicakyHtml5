@@ -45,16 +45,22 @@
             this.password;
             this.HashedPassword;
             this.loggIn = function(){
-                var URL = "http://192.168.1.61:8080/PupilBookV11/webresources/Students/";
+                
                 this.HashedPassword = calcMD5(this.password);
-                $http.get(URL + this.login + "/" + this.HashedPassword)
+                var URL = "http://servisplzenska.cz/test/login.php" + "?login=" + this.login + "&password=" + this.HashedPassword;
+                $http.get(URL)
                         .success(function(data){
-                            if(data !== ""){
-                                localStorage.setItem("login", data.login);
-                                localStorage.setItem("name", data.firstName + " " + data.lastName);
-                                localStorage.setItem("password", data.password);
-                                localStorage.setItem("studyGroup", data.studyGroupID);
-                                localStorage.setItem("email", data.email);
+                            if(data.length !== 0){
+                                localStorage.setItem("login", data[0].login);
+                                localStorage.setItem("name", data[0].fname + " " + data[0].lname);
+                                localStorage.setItem("password", data[0].password);
+                                localStorage.setItem("oec", data[0].oec);
+                                localStorage.setItem("phone", data[0].phone);
+                                localStorage.setItem("email", data[0].email);
+                                localStorage.setItem("role", data[0].role);
+                                localStorage.setItem("pas", data[0].pas);
+                                localStorage.setItem("rota", data[0].rota);
+                                localStorage.setItem("ceta", data[0].ceta);
                                 $scope.$emit('reloadPage', null);
                             }   else {
                                 alert("Přihlášení se nepodařilo :( asi na <> heslo");
@@ -67,11 +73,20 @@
                 localStorage.setItem("login", "undefined");
                 localStorage.setItem("name", "undefined");
                 localStorage.setItem("password", "undefined");
-                localStorage.setItem("studyGroup", "undefined");
+                localStorage.setItem("oec", "undefined");
+                localStorage.setItem("phone", "undefined");
                 localStorage.setItem("email", "undefined");
+                localStorage.setItem("role", "undefined");
+                localStorage.setItem("pas", "undefined");
+                localStorage.setItem("rota", "undefined");
+                localStorage.setItem("ceta", "undefined");
                 $scope.$emit('reloadPage', null);
             };
     }]);
+    
+    
+    
+    
     
     var hex_chr = "0123456789abcdef";
     function rhex(num)

@@ -1,15 +1,19 @@
-<?php
-$servername = "wm29.wedos.net";
-$username = "a28170_jerabek";
-$password = "lithium1";
+<?php require 'resources.php';
+    
 
-// Create connection
-$conn = new mysqli($servername, $username, $password);
+    $sql = "SELECT * FROM `users` LIMIT 0, 100";
+    $result = $conn->query($sql);
+    $rows = array();
+    if ($result->num_rows > 0) {
+        // output data of each row
+        while($row = $result->fetch_assoc()) {
+            $rows[] = $row;
+        }
+    } else {
+        echo "0 results";
+    }
+    print json_encode($rows);
+    $conn->close();
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} 
-echo "Connected successfully";
 ?>
 
