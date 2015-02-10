@@ -2,5 +2,9 @@
     "elements": {
         "login-dir": {}
     },
-    "attributes": {}
+    "attributes": {
+        "aria-expanded": {
+            "context": "button"
+        }
+    }
 }

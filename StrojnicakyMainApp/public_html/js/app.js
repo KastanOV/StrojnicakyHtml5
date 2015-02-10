@@ -9,7 +9,9 @@
         var initPage = function(){
             var login = localStorage.getItem("login");
             var password = localStorage.getItem("password");
+            var UserName = localStorage.getItem("name");
 
+            $scope.loggeduserName = UserName;
             if(login === "undefined" || password === "undefined"){
                 //Uzivatel NENÍ přihlášen 
                 $scope.loggedUser = false;
@@ -38,6 +40,46 @@
           templateUrl: 'navbar.html'
        } ;
     });
+    home.directive('usersMainpage', function(){
+       return{
+           restrict: 'E',
+           templateUrl: 'mainpage.html',
+           controller: function($scope,$http){
+                var login = localStorage.getItem("login");
+                var password = localStorage.getItem("password");
+                var ceta = localStorage.getItem("ceta");
+                $scope.UsersList;
+                $scope.Nasrat;
+                var loadUsersData = function(){
+                    
+                    var URLUsers = "http://127.0.0.1/projects/StrojnicakyServices/getUsers.php" + "?login=" + login + "&password=" + password + "&ceta=" + ceta;
+                    $http.get(URLUsers)
+                        .success(function(data){
+                            $scope.UsersList = data;
+                            loadPageData();
+                        }).error(function(){
+                            alert("neco je spatne :(");
+                    });
+               };
+               var loadPageData = function(){
+                   debugger;
+                   var nasrat;
+                    var URLPapers = "http://127.0.0.1/projects/StrojnicakyServices/getPapers.php" + "?login=" + login + "&password=" + password + "&ceta=" + ceta;
+                                $http.get(URLPapers)
+                                        .success(function(data){
+                                           $scope.Nasrat = data;
+                                           debugger; 
+                                }).error(function(){
+                                    alert("neco je spatne :(");
+                                });
+               };
+            loadUsersData();
+                
+           },
+           controllerAs: 'usersCtrl'
+       } ;
+    });
+    
     
     home.controller('loginController', ['$scope','$http', function($scope,$http){
        console.log("LoginController INITIALIZED");
@@ -47,7 +89,7 @@
             this.loggIn = function(){
                 
                 this.HashedPassword = calcMD5(this.password);
-                var URL = "http://servisplzenska.cz/test/login.php" + "?login=" + this.login + "&password=" + this.HashedPassword;
+                var URL = "http://127.0.0.1/projects/StrojnicakyServices/login.php" + "?login=" + this.login + "&password=" + this.HashedPassword;
                 $http.get(URL)
                         .success(function(data){
                             if(data.length !== 0){
